@@ -1,0 +1,300 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[      8414,        291]
+NotebookOptionsPosition[      6649,        231]
+NotebookOutlinePosition[      7021,        247]
+CellTagsIndexPosition[      6978,        244]
+WindowFrame->Normal
+ContainsDynamic->False*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Computing Kempner Sums", "Title"],
+
+Cell[TextData[{
+ "This notebook demonstrates the algorithm in the paper, \"Summing a curious, \
+slowly convergent series\" by Thomas Schmelzer and Robert Baillie, in the ",
+ StyleBox["American Mathematical Monthly",
+  FontSlant->"Italic"],
+ ", June/July, 2008, ",
+ "pages 525-540",
+ "."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Initialization: read in the source code.", "Section"],
+
+Cell[TextData[{
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " will look for this .m file in the directories specified by ",
+ StyleBox["$Path",
+  FontColor->RGBColor[0, 0, 1]],
+ ".  If the file is not in any of these directories, you must specify the \
+full path and file name yourself."
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"<<", " ", "kempnerSums.m"}]], "Input",
+ InitializationCell->True]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Some Basic Calculations", "Section"],
+
+Cell["Compute the sum of 1/n where n has no digit 9 in base 10:", "Text"],
+
+Cell[BoxData[
+ RowBox[{"kSum", "[", "9", "]"}]], "Input"],
+
+Cell[TextData[{
+ "Compute the sum of 1/n where n has no 09.  Because of the leading zero, ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " will interpret 09 as 9, so we must enclose 09 in quotes:"
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"kSum", "[", "\"\<09\>\"", "]"}]], "Input"],
+
+Cell["\<\
+Compute, to 30 decimals, the sum of 1/n where n has none of the digits 3, 1, \
+or 4:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"kSum", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"3", ",", " ", "1", ",", " ", "4"}], "}"}], ",", "30"}], 
+  "]"}]], "Input"],
+
+Cell["Compute the sum of 1/n where n has no digit string 314:", "Text"],
+
+Cell[BoxData[
+ RowBox[{"kSum", "[", "314", "]"}]], "Input"],
+
+Cell["\<\
+Now we will compute the partial sum of this last series over all n having at \
+most 100 digits (that is, for n < 10^100).  Even though that's a huge number \
+of terms, observe that this partial sum is still less than 1/10th as large as \
+the sum of the entire series:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"kPartialSum", "[", "100", "]"}]], "Input"],
+
+Cell["\<\
+How far do we have to go in this series to make the partial sum exceed 1000?  \
+The next calculation shows that we must include at least some terms with \
+569-digit denominators.  The sum of all terms with n  < 10^568 is about \
+998.796459, while the sum with n < 10^569 is about 1000.100104 :\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"kPartialSumThreshold", "[", "1000", "]"}]], "Input"],
+
+Cell[TextData[{
+ "We can also do calculations in bases other than 10.  Here we compute, to 30 \
+decimals, the sum of 1/n where n has no 0 in base 2.  This sum can be \
+verified because it is equal to the rapidly-converging sum  ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    UnderoverscriptBox["\[Sum]", 
+     RowBox[{"k", "=", "1"}], "\[Infinity]"], 
+    FractionBox["1", 
+     RowBox[{
+      SuperscriptBox["2", "k"], " ", "-", " ", "1"}]]}], TraditionalForm]]],
+ " = 1.6066951524... ."
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"kSum", "[", 
+  RowBox[{"0", ",", " ", "30", ",", " ", "2"}], "]"}]], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Matrices Used in the Calculations", "Section"],
+
+Cell["Given a set of missing digits, compute the T matrix:", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"kSumGetT", "[", "0", "]"}], " ", "//", " ", 
+  "MatrixForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"kSumGetT", "[", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3", ",", "5", ",", "7"}], "}"}], "]"}], " ", "//", " ",
+   "MatrixForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"kSumGetT", "[", "314", "]"}], " ", "//", " ", 
+  "MatrixForm"}]], "Input"],
+
+Cell["\<\
+Given a set of missing digits (0 and 11), compute the A matrix:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"kSumGetA", "[", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", " ", "11"}], "}"}], "]"}], " ", "//", " ", 
+  "MatrixForm"}]], "Input"],
+
+Cell["\<\
+If you have computed a T matrix yourself, you can use that matrix to compute \
+the corresponding sum.  Here is an example from Section 6 of the paper:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"tExample", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "0", ",", "3", ",", "0", ",", "1", ",", "0", ",", "2", ",", "0", ",", 
+       "1", ",", "0", ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "0", ",", "3", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0", ",", 
+       "1", ",", "0", ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "0", ",", "3", ",", "0", ",", "4", ",", "0", ",", "2", ",", "0", ",", 
+       "1", ",", "0", ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "0", ",", "3", ",", "0", ",", "1", ",", "0", ",", "5", ",", "0", ",", 
+       "1", ",", "0", ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "0", ",", "3", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0", ",", 
+       "6", ",", "0", ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "0", ",", "3", ",", "0", ",", "1", ",", "0", ",", "2", ",", "0", ",", 
+       "1", ",", "0", ",", "0"}], "}"}]}], "}"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"kSum", "[", "tExample", "]"}]], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Characteristic Polynomial and Eigenvalues of the A Matrix", "Section"],
+
+Cell["Here are a string and its corresponding matrix A:", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"aMatrix", " ", "=", " ", 
+   RowBox[{"kSumGetA", "[", "314", "]"}]}], ";", " ", 
+  RowBox[{"aMatrix", " ", "//", " ", "MatrixForm"}]}]], "Input"],
+
+Cell["\<\
+Here are the Characteristic Polynomial of A and the Eigenvalues of A:\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"CharacteristicPolynomial", "[", 
+  RowBox[{"aMatrix", ",", "x"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"N", " ", "[", 
+  RowBox[{
+   RowBox[{"Eigenvalues", "[", "aMatrix", "]"}], ",", " ", "20"}], 
+  "]"}]], "Input"]
+}, Open  ]]
+}, Open  ]]
+},
+AutoGeneratedPackage->None,
+WindowSize->{960, 560},
+WindowMargins->{{Automatic, 57}, {Automatic, -2}},
+FrontEndVersion->"6.0 for Microsoft Windows (32-bit) (February 7, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 39, 0, 83, "Title"],
+Cell[632, 25, 298, 8, 57, "Text"],
+Cell[CellGroupData[{
+Cell[955, 37, 59, 0, 71, "Section"],
+Cell[1017, 39, 304, 8, 57, "Text"],
+Cell[1324, 49, 89, 2, 36, "Input",
+ InitializationCell->True]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1450, 56, 42, 0, 71, "Section"],
+Cell[1495, 58, 73, 0, 34, "Text"],
+Cell[1571, 60, 57, 1, 36, "Input"],
+Cell[1631, 63, 214, 5, 57, "Text"],
+Cell[1848, 70, 66, 1, 36, "Input"],
+Cell[1917, 73, 108, 3, 34, "Text"],
+Cell[2028, 78, 153, 5, 36, "Input"],
+Cell[2184, 85, 71, 0, 34, "Text"],
+Cell[2258, 87, 59, 1, 36, "Input"],
+Cell[2320, 90, 291, 5, 80, "Text"],
+Cell[2614, 97, 66, 1, 36, "Input"],
+Cell[2683, 100, 317, 5, 80, "Text"],
+Cell[3003, 107, 76, 1, 36, "Input"],
+Cell[3082, 110, 498, 13, 87, "Text"],
+Cell[3583, 125, 101, 2, 36, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3721, 132, 52, 0, 71, "Section"],
+Cell[3776, 134, 68, 0, 34, "Text"],
+Cell[3847, 136, 107, 3, 36, "Input"],
+Cell[3957, 141, 176, 5, 36, "Input"],
+Cell[4136, 148, 109, 3, 36, "Input"],
+Cell[4248, 153, 87, 2, 34, "Text"],
+Cell[4338, 157, 162, 5, 36, "Input"],
+Cell[4503, 164, 174, 3, 57, "Text"],
+Cell[4680, 169, 1166, 28, 172, "Input"],
+Cell[5849, 199, 64, 1, 36, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5950, 205, 76, 0, 71, "Section"],
+Cell[6029, 207, 65, 0, 34, "Text"],
+Cell[6097, 209, 180, 4, 36, "Input"],
+Cell[6280, 215, 93, 2, 34, "Text"],
+Cell[6376, 219, 106, 2, 36, "Input"],
+Cell[6485, 223, 136, 4, 36, "Input"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
