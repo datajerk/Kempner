@@ -1,4 +1,4 @@
-This package shows how to compute the sum of some very strange convergent series.
+This MATHEMATICA package shows how to compute the sum of some very strange convergent series.
 
 The harmonic series 1/1 + 1/2 + 1/3 + ... + 1/n + ... diverges. This means that the sum can be made as large as desired by adding enough terms.
 
