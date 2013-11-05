@@ -31,21 +31,24 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>This MATHEMATICA package shows how to compute the sum of some very strange convergent series.</p>
+        <h2>
+<a name="mathematica" class="anchor" href="#mathematica"><span class="octicon octicon-link"></span></a>Mathematica</h2>
 
-<p>The harmonic series 1/1 + 1/2 + 1/3 + ... + 1/n + ... diverges. This means that the sum can be made as large as desired by adding enough terms.</p>
+<p><a href="http://www.wolfram.com/products/player/">Viewer</a> for Notebook files.</p>
 
-<p>Suppose we delete from this series all terms with a "9" in the denominator. That is, we remove 1/9, 1/19, 1/29, etc. Then the remaining series converges to a sum less than 80. This very surprising result was proved by A. J. Kempner in 1914.</p>
+<h2>
+<a name="the-harmonic-series" class="anchor" href="#the-harmonic-series"><span class="octicon octicon-link"></span></a>The harmonic series</h2>
 
-<p>We also get convergent series if we pick any other digit string (say, "314159") and compute the sum of 1/n where n contains no "314159".</p>
+<p>The series of <a href="http://en.wikipedia.org/wiki/Harmonic_number">harmonic numbers</a> H_n = 1/1 + 1/2 + 1/3 + ... + 1/n diverges. 
+For each c there is an n such that H_n &gt; c.</p>
 
-<p>Unfortunately, these series converge so slowly that it is impossible to compute their sums simply by adding up terms. A more sophisticated algorithm is required. As a result, this computational problem has attracted much interest over the years.</p>
+<h2>
+<a name="kempner-series" class="anchor" href="#kempner-series"><span class="octicon octicon-link"></span></a>Kempner series</h2>
 
-<p>The article, "Summing a Curious, Slowly Convergent Series" by Thomas Schmelzer and Robert Baillie in the American Mathematical Monthly, vol. 115, pages 525-540 (June/July 2008) has an algorithm that computes sums of these and related series quickly, and to high precision.</p>
-
-<p>This Mathematica package implements the algorithm in that article.</p>
-
-<p>The sum of the "no 9" series is about 22.920676619264150. The sum of the series where the denominators contain no "314159" is about 2302582.333863782607892.</p>
+<ul>
+<li><a href="http://mathworld.wolfram.com/KempnerSeries.html">Wolfram Mathworld</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Kempner_series">Wikipedia</a></li>
+</ul>
       </section>
     </div>
 
