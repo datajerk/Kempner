@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# construct a local python environment for the client...
+conda create -y -p=./env python=3.5 numpy scipy
